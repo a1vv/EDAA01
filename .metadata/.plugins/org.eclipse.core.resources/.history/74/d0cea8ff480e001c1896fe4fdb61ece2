@@ -1,0 +1,10 @@
+package textproc;
+
+import java.util.Set;
+
+public class GeneralWordCounter implements TextProcessor {
+
+	public GeneralWordCounter(Set<String> xc) {
+		
+	}
+}

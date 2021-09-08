@@ -10,7 +10,7 @@ public class SingleWordCounter implements TextProcessor {
 	}
 
 	public void process(String w) {
-		if (w == word) {
+		if (word.equals(w)) { // stod w == word, jämför inte strängens innehåll.
 			n++;
 		}
 	}
