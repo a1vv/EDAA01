@@ -36,6 +36,7 @@ public class Holgersson {
 
 		while (s.hasNext()) {
 			String word = s.next().toLowerCase();
+
 			for(TextProcessor p : processors) {
 				p.process(word);
 			}

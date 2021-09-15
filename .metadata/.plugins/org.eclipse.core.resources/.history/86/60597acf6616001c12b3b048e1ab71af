@@ -1,8 +1,7 @@
 package textproc;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.*;
+import java.io.*;
 
 public class Holgersson {
 
@@ -10,16 +9,15 @@ public class Holgersson {
 			"halland", "hälsingland", "härjedalen", "jämtland", "lappland", "medelpad", "närke", "skåne", "småland",
 			"södermanland", "uppland", "värmland", "västerbotten", "västergötland", "västmanland", "ångermanland",
 			"öland", "östergötland" };
-	private static ArrayList<TextProcessor> processors;
-	
+
 	public static void main(String[] args) throws FileNotFoundException {
 		long t0 = System.nanoTime();
 		
-		processors = new ArrayList<TextProcessor>();
+		List<TextProcessor> processors = new List<TextProcessor>()
 		
-		processors.add(new SingleWordCounter("nils"));
-		processors.add(new SingleWordCounter("norge"));
-		processors.add(new MultiWordCounter(REGIONS));
+		TextProcessor p = new SingleWordCounter("nils");
+		TextProcessor p1 = new SingleWordCounter("norge");
+		TextProcessor m = new MultiWordCounter(REGIONS);
 
 		Scanner s = new Scanner(new File("nilsholg.txt"));
 		s.findWithinHorizon("\uFEFF", 1);
@@ -32,21 +30,23 @@ public class Holgersson {
 			stopwords.add(word);
 		}
 		
-		processors.add(new GeneralWordCounter(stopwords));
+		TextProcessor g = new GeneralWordCounter(stopwords);
 
 		while (s.hasNext()) {
 			String word = s.next().toLowerCase();
-			for(TextProcessor p : processors) {
-				p.process(word);
-			}
+
+			p.process(word);
+			p1.process(word);
+			m.process(word);
+			g.process(word);
 		}
 
 		s.close();
 
-		for(TextProcessor p : processors) {
-			p.report();
-			System.out.println("_______________________________________");
-		}
+		p.report();
+		p1.report();
+		m.report();
+		g.report();
 		
 		long t1 = System.nanoTime();
 		
