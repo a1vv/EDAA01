@@ -1,2 +1,12 @@
-
-.metadata
+.metadata\*
+.metadata/*
+.metadata/.plugins/org.eclipse.m2e.logback.configuration/0.log
+.metadata/.plugins/org.eclipse.jdt.ui/OpenTypeHistory.xml
+.metadata/.plugins/org.eclipse.jdt.ui/jdt-images/3.png
+.metadata/.plugins/org.eclipse.jdt.ui/dialog_settings.xml
+.metadata/.plugins/org.eclipse.jdt.junit/dialog_settings.xml
+.metadata/.plugins/org.eclipse.jdt.junit/dialog_settings.xml
+.metadata/.plugins/org.eclipse.jdt.ui/dialog_settings.xml
+.metadata/.plugins/org.eclipse.jdt.ui/jdt-images/3.png
+.metadata/.plugins/org.eclipse.jdt.ui/OpenTypeHistory.xml
+.metadata/.plugins/org.eclipse.m2e.logback.configuration/0.log
