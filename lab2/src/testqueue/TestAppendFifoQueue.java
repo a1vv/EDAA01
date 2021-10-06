@@ -64,7 +64,7 @@ class TestAppendFifoQueue {
 	}
 	
 	@Test
-	void testIncest() {
+	void testAppendToItself() {
 		q1.offer(22);
 		q1.offer(29);
 		q1.offer(299);
