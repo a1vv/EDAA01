@@ -25,6 +25,11 @@ public class BookReaderApplication {
 		}
 		
 		GeneralWordCounter counter = new GeneralWordCounter(stopwords);
+		
+		while(s.hasNext()) {
+			counter.process(s.next());
+		}
+		
 		BookReaderController controller = new BookReaderController(counter);
 		
 		
