@@ -12,7 +12,7 @@ public class BookReaderApplication {
 			"öland", "östergötland" };
 	
 	public static void main(String[] args) throws FileNotFoundException {
-		
+				
 		Scanner s = new Scanner(new File("nilsholg.txt"));
 		s.findWithinHorizon("\uFEFF", 1);
 		s.useDelimiter("(\\s|,|\\.|:|;|!|\\?|'|\\\")+");
