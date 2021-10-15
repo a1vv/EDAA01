@@ -22,4 +22,10 @@
 			<item value="org.eclipse.ui.Basic"/>
 		</list>
 	</section>
+	<section name="PreferencesImportWizard">
+		<item key="" value="C:\Users\simon\Downloads\theme-21.epf"/>
+		<list key="WizardPreferencesExportPage1.STORE_DESTINATION_NAMES_ID">
+			<item value="C:\Users\simon\Downloads\theme-21.epf"/>
+		</list>
+	</section>
 </section>

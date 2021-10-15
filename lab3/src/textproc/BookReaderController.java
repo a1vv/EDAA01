@@ -79,6 +79,4 @@ public class BookReaderController {
 		frame.pack();
 		frame.setVisible(true);
 	}
-	
-	
 }
