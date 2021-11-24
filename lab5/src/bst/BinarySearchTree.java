@@ -13,7 +13,7 @@ public class BinarySearchTree<E> {
 	 * Constructs an empty binary search tree.
 	 */
 	public BinarySearchTree() {
-		
+		size = 0;
 	}
 	
 	/**

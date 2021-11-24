@@ -43,11 +43,10 @@ public class Mountain extends Fractal {
 			Point m2 = checkSide(p2,p3,dev);
 			Point m3 = checkSide(p3,p1,dev);
 
-			dev = dev/2;
-			fractalLine(turtle,order-1,m1,m2,m3,dev);
-			fractalLine(turtle,order-1,p1,m1,m3,dev);
-			fractalLine(turtle,order-1,p2,m1,m2,dev);
-			fractalLine(turtle,order-1,p3,m2,m3,dev);
+			fractalLine(turtle,order-1,m1,m2,m3,dev/2);
+			fractalLine(turtle,order-1,p1,m1,m3,dev/2);
+			fractalLine(turtle,order-1,p2,m1,m2,dev/2);
+			fractalLine(turtle,order-1,p3,m2,m3,dev/2);
 		}
 	}
 	/*

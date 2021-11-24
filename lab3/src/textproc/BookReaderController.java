@@ -1,7 +1,6 @@
 package textproc;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.*;
 
 import java.awt.BorderLayout;
