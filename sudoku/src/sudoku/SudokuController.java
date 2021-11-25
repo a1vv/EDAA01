@@ -6,21 +6,29 @@ import javax.swing.*;
 public class SudokuController {
 	private SudokuSolverClass solver;
 	private JTextField[][] cells;
-	private JFrame frame;
+	private JPanel sudokuPanel;
 	
 	public SudokuController(SudokuSolverClass solver) {
 		this.solver = solver;
-		int snopp = solver.getSize();
-		this.cells = new JTextField[snopp][snopp];
-		SwingUtilities.invokeLater(() -> createWindow( "Sudoku Solver", 500, 550));
+		int size = solver.getSize();
+		this.cells = new JTextField[size][size];
+		SwingUtilities.invokeLater(() -> createWindow( "Sudoku Solver", size*60, size*60));
 	}
 
 	private void  createWindow(String title, int height, int width) {
 		
+		try {
+			UIManager.setLookAndFeel(
+			        UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e) {
+			System.out.println("Couldn't change look and feel.");
+		} 
+		
+		
 		int snopp = solver.getSize();
 		
 		// create new frame
-		frame = new JFrame(title);
+		JFrame frame = new JFrame(title);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		// get the contentPane from frame
@@ -30,49 +38,63 @@ public class SudokuController {
 		GridLayout grid = new GridLayout(snopp, snopp,0,0);
 		
 		// create panel for gridlayout
-		JPanel panel = new JPanel(grid);
+		this.sudokuPanel = new JPanel(grid);
 		
-		// populate gridlayout with textfields
-		for (int r = 0; r < 9; r++) {
-           for (int c = 0; c < 9; c++) { 
-        	   cells[r][c] = new JTextField();
-        	   cells[r][c].setHorizontalAlignment(JTextField.CENTER);        	 
-        	   cells[r][c].setFont(new Font("SansSerif", Font.BOLD, 20));
-        	   cells[r][c].setBackground(squareBackground(r,c));
-               panel.add(cells[r][c]);
-           	}
-		}
+		updateGrid(true);
 		
 		// create bottompanel with buttons
 		JButton btnSolve = new JButton("Solve");
 		btnSolve.addActionListener(p->{
 			solve();
 		});
+		btnSolve.setFont(new Font("SansSerif", Font.BOLD, 16));
+		btnSolve.setMargin(new Insets(10, 10, 10, 10));
 		
 		JButton btnClear = new JButton("Clear");
 		btnClear.addActionListener(p->{
-			solver.clear();
-			updateGrid();
+			clear();
 		});
+		btnClear.setFont(new Font("SansSerif", Font.BOLD, 16));
+		btnClear.setMargin(new Insets(10, 10, 10, 10));
 		
-		JPanel bottomPanel = new JPanel();
-		bottomPanel.add(btnSolve, BorderLayout.WEST);
-		bottomPanel.add(btnClear, BorderLayout.EAST);
+		// add button to switch between premade sudokus
+		JButton btnSwitch = new JButton("Next");
+		btnSwitch.addActionListener(p->{
+			cycleThroughPresets();
+		});
+		btnSwitch.setFont(new Font("SansSerif", Font.BOLD, 16));
+		btnSwitch.setMargin(new Insets(10, 10, 10, 10));
+		
+		JPanel bottomPanel = new JPanel(new BorderLayout(0,0));
+		bottomPanel.add(btnClear, BorderLayout.WEST);
+		bottomPanel.add(btnSolve, BorderLayout.CENTER);
+		bottomPanel.add(btnSwitch, BorderLayout.EAST);
 		pane.add(bottomPanel, BorderLayout.SOUTH);
 		frame.getRootPane().setDefaultButton(btnSolve);
 	
-		pane.add(panel);
+		pane.add(sudokuPanel);
 		frame.pack();
 		frame.setSize(new Dimension(width, height));
 		frame.setVisible(true);
 	}
 	
+	private void cycleThroughPresets() {
+		solver.clear();
+		solver.cycleThroughPresets();
+		updateGrid(false);
+	}
+	
+	private void clear() {
+		solver.clear();
+		updateGrid(false);
+	}
+	
 	private void solve() {
-		
+		int size = solver.getSize();
 		// convert jtextfield array into an int array
-		int[][] matrix = new int[9][9];
-		for (int r = 0; r < 9; r++) {
-           for (int c = 0; c < 9; c++) { 	
+		int[][] matrix = new int[size][size];
+		for (int r = 0; r < size; r++) {
+           for (int c = 0; c < size; c++) { 	
     		   String text = cells[r][c].getText();
     		   if(text.equals("")) {
     			   matrix[r][c] = 0;
@@ -80,60 +102,76 @@ public class SudokuController {
     			   try {
     	        	   matrix[r][c] = Integer.parseInt(text);
             	   } catch (Exception e) {
-            		   JOptionPane.showMessageDialog(frame,"Entry has to be an integer");
+            		   JOptionPane.showMessageDialog(sudokuPanel,"Entry has to be an integer");
             	   }
-    		   }
-        	   
-        	  
+    		   } 
            }
 		}
 		
 		// update the matrix
 		solver.setMatrix(matrix);
 		// try to solve it
+		long startTime = System.currentTimeMillis();
 		boolean solvable = solver.solve();
+		long time = (System.currentTimeMillis() - startTime);
 		System.out.println(solvable);
-		if( solvable ) {
-			updateGrid();
-		} else {
-
- 		   JOptionPane.showMessageDialog(frame,"UNSOLVABLE");
-		}
 		
+		if( solvable ) {
+			updateGrid(false);
+			JOptionPane.showMessageDialog(sudokuPanel,"SOLVED IN "+time+" ms.");
+		} else {
+ 		   JOptionPane.showMessageDialog(sudokuPanel,"UNSOLVABLE ("+time+" ms)");
+		}
+		System.out.println("Recursion count: "+solver.getCount());
 	}
 	
-	
-	// TODO: expandera denna funktion så att den täcker det fall när inga textfields finns, som är skrivet i createWindow atm.
-	private void updateGrid() {
+	/**
+	 * Update the JTextFields on screen
+	 * @param startup
+	 */
+	private void updateGrid(boolean startup) {
 		int[][] matrix = solver.getMatrix();
-		for (int r = 0; r < 9; r++) {
-           for (int c = 0; c < 9; c++) { 	   
-        	  // System.out.println("setting value in " + r + c + " to " + matrix[r][c] );
+		int size = solver.getSize();
+		if(startup) {
+			// populate gridlayout with textfields
+	   		for (int r = 0; r < size; r++) {
+	          for (int c = 0; c < size; c++) { 
+	       	   cells[r][c] = new JTextField();
+	       	   cells[r][c].setHorizontalAlignment(JTextField.CENTER);        	 
+	       	   cells[r][c].setFont(new Font("SansSerif", Font.BOLD, 20));
+	       	   cells[r][c].setBackground(generateColor(r,c,true));
+	       	   cells[r][c].setBorder(BorderFactory.createLineBorder(Color.white, 1));
+	       	   	sudokuPanel.add(cells[r][c]);
+	          	}
+	   		}
+		}
+		for (int r = 0; r < size; r++) {
+           for (int c = 0; c < size; c++) { 	   
         	   String value = ""+matrix[r][c];
         	   if(value.equals("0")) {
         		   value = "";
         	   }
                cells[r][c].setText(""+value);
            	}
-		}
+		} 
 	}
 	
-	private Color squareBackground(int row, int col) {
+	
+	/**
+	 * Given a row and column, return a colur
+	 * @param row
+	 * @param col
+	 * @return background color
+	 */
+	private Color generateColor(int row, int col, boolean background) {
 		
 		int sizeRoot = (int) Math.sqrt(solver.getSize()); 
 		int squareRow = row/sizeRoot;
 		int squareCol = col/sizeRoot;
 		
-		if( (squareRow % 2 == 0 ) && (squareCol % 2 == 0) || (squareRow == 1 && squareCol == 1)) {
-			return Color.lightGray;
+		if( (squareRow % 2 == 0 ) && (squareCol % 2 == 0) || (squareRow % 2 == 1 && squareCol % 2 == 1) ) {
+			return new Color(255,168,143);
 		}
-		/*
-		if((squareRow == 0 || squareRow == 2 ) && (squareCol == 0 || squareCol == 2) || (squareRow == 1 && squareCol == 1)) {
-			return Color.lightGray;
-		}
-		*/
-		return Color.white;
-		
-		
+		return new Color(255,204,143);
 	}
 }
