@@ -55,13 +55,22 @@ public class SudokuSolverClass implements SudokuSolver {
 		 this.matrix = testSudokus.get(currentTestMatrix);
 	}
 	
+	
+	/**
+	 * Attempts to solve the sudoku
+	 * @return true if solveable
+	 */
 	@Override
 	public boolean solve() {
 		resetCount();
+		// if checkInput is false return false without wasting time trying to solve
 		return checkInputs() ? solve( 0, 0 ) : false;
 	}
 	
-	// check all the inputted numbers to see if they are allowed (instead of trying to solve a clearly unsolvable sudoku)
+	/**
+	 * check all the inputted numbers to see if they are allowed (instead of trying to solve a clearly unsolvable sudoku)
+	 * @return true if inputs are allowed
+	 */
 	private boolean checkInputs() {
 		for(int r = 0 ; r < size ; r++) {
 			for(int c = 0 ; c < size ; c++) {
@@ -78,14 +87,25 @@ public class SudokuSolverClass implements SudokuSolver {
 		return true;
 	}
 	
-	// return true if integer num is in range
+	/**
+	 *  return true if integer num is in range
+	 * @param num the input to check
+	 * @return true if the input is in range
+	 */
 	private boolean isInputAllowed(int num) {
-		if( num > 0 && num < size) {
+		if( num > 0 && num <= size) {
 			return true;
 		}
 		return false;
 	}
 	
+	
+	/**
+	 * Recursive solve method
+	 * @param row: current row to check
+	 * @param col: current column to check
+	 * @return true if entire sudoku could be solved
+	 */
 	private boolean solve(int row, int col ) {
 		recursionCount++;
 		// if column is larger than size, go to first cell on next row next row 
@@ -127,15 +147,27 @@ public class SudokuSolverClass implements SudokuSolver {
 		return solve(row,col+1);
 	}
 
+	/** 
+	 * Public method to access recursionCount variable
+	 * @return number of times the private solve() method has been called
+	 */
 	public int getCount() {
 		return recursionCount;
 	}
 	
+	/**
+	 * Resets the recursion counter
+	 */
 	private void resetCount() {
 		recursionCount = 0;
 	}
 
-	// return true if number is valid, otherwise false
+	/**
+	 * Check validity of number, ergo if sudoku rules allow it
+	 * @param row to check
+	 * @param col to check
+	 * @return true if number is valid, otherwise false
+	 */
 	private boolean isNumberValid(int row, int col) {
 		// save number
 		int num = matrix[row][col];
@@ -148,6 +180,12 @@ public class SudokuSolverClass implements SudokuSolver {
 		return isAllowed;
 	}
 	
+	/**
+	 * Check if number is valid in row
+	 * @param row to check
+	 * @param num: number to check row for
+	 * @return true if number is valid in row
+	 */
 	private boolean isRowValid(int row, int num) {
 		for( int i = 0 ; i < size ; i++ ) {
 			if( num == matrix[row][i] ) {
@@ -158,6 +196,12 @@ public class SudokuSolverClass implements SudokuSolver {
 		return true;
 	}
 	
+	/**
+	 * Check if number is valid in column
+	 * @param col: column to check
+	 * @param num: number to check for in column
+	 * @return true if number is valid in column
+	 */
 	private boolean isColumnValid(int col, int num) {
 		for( int i = 0 ; i < size ; i++ ) {
 			if( num == matrix[i][col] ) {
@@ -168,7 +212,13 @@ public class SudokuSolverClass implements SudokuSolver {
 		return true;
 	}
 
-	
+	/**
+	 * Check if number is valid in square
+	 * @param row that the number is located in
+	 * @param col that the number is located in
+	 * @param num: number to check
+	 * @return true if number is valid in square
+	 */
 	private boolean isSquareValid(int row, int col, int num) {
 		
 		// find index of the first cell in the related square
@@ -189,32 +239,64 @@ public class SudokuSolverClass implements SudokuSolver {
 		return true;
 	}
 		
+	/**
+	 * Getter for size
+	 * @return size of sudoku
+	 */
 	public int getSize() {
 		return size;
 	}
 	
 
+	/**
+	 * Puts digit in the box row, col.
+	 * @param row   The row [1..9]
+	 * @param col   The column [1..9]
+	 * @param digit The digit to insert in box row, col
+	 * @throws IllegalArgumentException if row, col or digit is outside the range [1..9]
+	 */
 	@Override
-	public void add(int row, int col, int digit) {
-		matrix[row][col] = digit;
+	public void add(int row, int col, int digit) throws IllegalArgumentException {
+		if(isInputAllowed(digit) && isInputAllowed(row) && isInputAllowed(col)) {
+			matrix[row-1][col-1] = digit;
+		} else {
+			 throw new IllegalArgumentException("Row, column or digit is outside the range [1.."+this.size+"].");
+		}
 	}
-
+	/**
+	 * Removes number from sudoku-matrix
+	 * @param row: to remove from [1..9]
+	 * @param col: the column to remove from [1..9]
+	 */
 	@Override
 	public void remove(int row, int col) {
-		matrix[row][col] = 0;		
+		matrix[row-1][col-1] = 0;		
 	}
 
+	/**
+	 * Get number from sudoku-matrix at position
+	 * @param row: The row
+	 * @param col: The column
+	 * @return integer number at position
+	 */
 	@Override
 	public int get(int row, int col) {
-		return matrix[row][col];
+		return matrix[row-1][col-1];
 	}
 
+	/**
+	 * Public method to check if numbers enterred into sudoku are valid
+	 * @return true if the numbers are valid
+	 */
 	@Override
 	public boolean isValid() {
 		
 		return checkInputs();
 	}
 
+	/**
+	 * Clear the sudoku-matrix
+	 */
 	@Override
 	public void clear() {
 		for(int r = 0 ; r < size; r++) {
@@ -224,6 +306,10 @@ public class SudokuSolverClass implements SudokuSolver {
 		}
 	}
 
+	/**
+	 * Set the sudoku-matrix
+	 * @param m: the matrix to set
+	 */
 	@Override
 	public void setMatrix(int[][] m) {
 		for (int r = 0; r < size; r++) {
@@ -233,6 +319,10 @@ public class SudokuSolverClass implements SudokuSolver {
 			}
 	}
 
+	/**
+	 * Get current sudoku-matrix
+	 * @return matrix
+	 */
 	@Override
 	public int[][] getMatrix() {
 		return matrix;
