@@ -25,7 +25,7 @@ public class SudokuController {
 		} 
 		
 		
-		int snopp = solver.getSize();
+		int size = solver.getSize();
 		
 		// create new frame
 		JFrame frame = new JFrame(title);
@@ -35,7 +35,7 @@ public class SudokuController {
 		Container pane = frame.getContentPane();
 		
 		// create new gridlayout
-		GridLayout grid = new GridLayout(snopp, snopp,0,0);
+		GridLayout grid = new GridLayout(size, size,0,0);
 		
 		// create panel for gridlayout
 		this.sudokuPanel = new JPanel(grid);
