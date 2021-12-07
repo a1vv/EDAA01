@@ -170,7 +170,32 @@ public class SimpleHashMap<K, V> implements Map<K, V> {
 
 	@Override
 	public V remove(Object arg0) {
-		// TODO Auto-generated method stub
+		
+		K key = (K) arg0;
+		int index = index(key);
+		
+		// if the list at index is empty, return null. Else:
+		if(table[index] != null) {
+			Entry<K,V> temp = table[index];
+			
+			// if the first item in the list contains the key
+			if(temp.getKey().equals(key)) {
+				table[index] = table[index].next; //Remove by setting next element to first in list
+				return temp.getValue();
+				
+			// else search through rest of list to find key
+			} else {
+				while(temp.next != null ) {
+					if (temp.next.getKey().equals(key)) {
+						V result = temp.next.getValue();
+						temp.next = temp.next.next;
+						return result;
+					}
+					temp = temp.next;
+				}
+			}
+		}
+		
 		return null;
 	}
 
