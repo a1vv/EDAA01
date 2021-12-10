@@ -141,7 +141,6 @@ public class SimpleHashMap<K, V> implements Map<K, V> {
 		return res;
 	}
 	
-	
 	/**
 	 * Take all entries and move to a new table with double the size.
 	 */
