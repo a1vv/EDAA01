@@ -170,8 +170,6 @@ public class SimpleHashMap<K, V> implements Map<K, V> {
 		}
 	}
 	
-	
-
 	@Override
 	public V remove(Object arg0) {
 		
