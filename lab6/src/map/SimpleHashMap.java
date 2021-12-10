@@ -6,6 +6,7 @@ public class SimpleHashMap<K, V> implements Map<K, V> {
 	
 	private Entry<K, V>[] table;
 	private double loadFactor;
+	private int size;
 	
 	
 	public static void main(String[] args) {
@@ -108,7 +109,6 @@ public class SimpleHashMap<K, V> implements Map<K, V> {
 			temp.setValue(value);
 		} else {
 			// set value last in list on index
-			
 			Entry<K, V> entry = new Entry<>(key, value);
 
 			// If index is empty
@@ -127,6 +127,8 @@ public class SimpleHashMap<K, V> implements Map<K, V> {
 				// Add it to the end
 				temp.next = entry;
 			}
+			// new element was added, increase size
+			size++;
 		}
 		
 		// check if the load factor is too high, rehash if that is the case.
@@ -144,6 +146,8 @@ public class SimpleHashMap<K, V> implements Map<K, V> {
 	 * Take all entries and move to a new table with double the size.
 	 */
 	private void rehash() {
+		
+		size = 0;
 		
 		Entry<K, V>[] oldTable = (Entry<K,V>[]) new Entry[table.length];
 
@@ -181,6 +185,7 @@ public class SimpleHashMap<K, V> implements Map<K, V> {
 			// if the first item in the list contains the key
 			if(temp.getKey().equals(key)) {
 				table[index] = table[index].next; //Remove by setting next element to first in list
+				size--;
 				return temp.getValue();
 				
 			// else search through rest of list to find key
@@ -189,6 +194,7 @@ public class SimpleHashMap<K, V> implements Map<K, V> {
 					if (temp.next.getKey().equals(key)) {
 						V result = temp.next.getValue();
 						temp.next = temp.next.next;
+						size--;
 						return result;
 					}
 					temp = temp.next;
@@ -201,18 +207,7 @@ public class SimpleHashMap<K, V> implements Map<K, V> {
 
 	@Override
 	public int size() {
-		int size = 0;
-		
-		for( int i = 0 ; i < table.length ; i++) {
-
-			Entry<K, V> temp = table[i];
-			while( temp != null) {
-				size++;
-				temp = temp.next;
-			}
-		}
-		
-		return size;
+		return this.size;
 	}
 	
 	private static class Entry<K, V> implements Map.Entry<K, V> {

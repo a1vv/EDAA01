@@ -12,7 +12,7 @@ public class BinarySearchTree<E> {
   
 	public static void main(String[] args) throws InterruptedException {
 		BSTVisualizer visualizer = new BSTVisualizer("window", 1200, 400);
-		BinarySearchTree<Integer> bst = new BinarySearchTree<Integer>((e2, e1) -> ((Comparable<Integer>) e1).compareTo(e2));
+		BinarySearchTree<Integer> bst = new BinarySearchTree<Integer>((e1, e2) -> ((Comparable<Integer>) e1).compareTo(e2));
 		Random rand = new Random();
 		
 		for (int i = 0; i < 50; i++) {
@@ -22,7 +22,7 @@ public class BinarySearchTree<E> {
 		visualizer.drawTree(bst);
 		bst.printTree();
 		
-		Thread.sleep(5000);
+		Thread.sleep(3000);
 		
 		bst.rebuild();
 		
