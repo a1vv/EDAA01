@@ -64,7 +64,8 @@ public class SudokuSolverClass implements SudokuSolver {
 	public boolean solve() {
 		resetCount();
 		// if checkInput is false return false without wasting time trying to solve
-		 return checkInputs() ? solve( 0, 0 ) : false;
+		return solve( 0, 0 );
+		 
 	}
 	
 	/**
@@ -326,7 +327,7 @@ public class SudokuSolverClass implements SudokuSolver {
 	        	   if (m[r][c] >= 0 && m[r][c] <= this.size) {
 	        		   matrix[r][c] = m[r][c];
 					} else {
-						throw new IllegalArgumentException("Digit outside of range [0 .. " +this.size+"]");
+						throw new IllegalArgumentException("Invalid input.");
 					}
 	           	}
 			}
