@@ -101,8 +101,10 @@ public class SudokuController {
     		   } else {
     			   try {
     	        	   matrix[r][c] = Integer.parseInt(text);
+    	        	   if ( matrix[r][c] == 0) throw new IllegalArgumentException();
             	   } catch (Exception e) {
-            		   JOptionPane.showMessageDialog(sudokuPanel,"Entry has to be an integer");
+            		   JOptionPane.showMessageDialog(sudokuPanel,"Entry has to be an integer between 1 and " + size);
+            		   // TODO: stop from solving sudoku 
             	   }
     		   } 
            }
