@@ -90,31 +90,42 @@ public class SudokuController {
 	}
 	
 	private void solve() {
+		
 		int size = solver.getSize();
+		
 		// convert jtextfield array into an int array
 		int[][] matrix = new int[size][size];
 		for (int r = 0; r < size; r++) {
            for (int c = 0; c < size; c++) { 	
     		   String text = cells[r][c].getText();
-    		   if(text.equals("")) {
+    		   if(text.equals("0")) {
+    			   System.out.println("Snopp");
+    			   matrix[r][c] = 20000;
+    		   } else if(text.equals("")) {
     			   matrix[r][c] = 0;
     		   } else {
     			   try {
     	        	   matrix[r][c] = Integer.parseInt(text);
-    	        	   if ( matrix[r][c] == 0) throw new IllegalArgumentException();
             	   } catch (Exception e) {
             		   JOptionPane.showMessageDialog(sudokuPanel,"Entry has to be an integer between 1 and " + size);
-            		   // TODO: stop from solving sudoku 
             	   }
     		   } 
            }
 		}
 		
-		// update the matrix
-		solver.setMatrix(matrix);
-		// try to solve it
+		// try to solve
 		long startTime = System.currentTimeMillis();
-		boolean solvable = solver.solve();
+		boolean solvable = false;
+		try {	
+			// update the matrix
+			solver.setMatrix(matrix);	
+			System.out.println("SNOPP");
+			solvable = solver.solve();
+		} catch ( Exception e) {
+			JOptionPane.showMessageDialog(sudokuPanel,e.getMessage());
+		}
+		
+
 		long time = (System.currentTimeMillis() - startTime);
 		System.out.println(solvable);
 		

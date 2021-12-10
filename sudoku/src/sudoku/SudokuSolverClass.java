@@ -64,7 +64,7 @@ public class SudokuSolverClass implements SudokuSolver {
 	public boolean solve() {
 		resetCount();
 		// if checkInput is false return false without wasting time trying to solve
-		return checkInputs() ? solve( 0, 0 ) : false;
+		 return checkInputs() ? solve( 0, 0 ) : false;
 	}
 	
 	/**
@@ -172,7 +172,7 @@ public class SudokuSolverClass implements SudokuSolver {
 		// save number
 		int num = matrix[row][col];
 		matrix[row][col] = 0;
-		System.out.println(""+row+col+"-"+num);
+		//System.out.println(""+row+col+"-"+num);
 		boolean isAllowed = isRowValid(row, num) && isColumnValid(col, num) && isSquareValid(row, col, num);
 		
 		matrix[row][col] = num;
@@ -189,7 +189,7 @@ public class SudokuSolverClass implements SudokuSolver {
 	private boolean isRowValid(int row, int num) {
 		for( int i = 0 ; i < size ; i++ ) {
 			if( num == matrix[row][i] ) {
-				System.out.println("number already exists in row");
+				//System.out.println("number already exists in row");
 				return false; 
 			}
 		}
@@ -205,7 +205,7 @@ public class SudokuSolverClass implements SudokuSolver {
 	private boolean isColumnValid(int col, int num) {
 		for( int i = 0 ; i < size ; i++ ) {
 			if( num == matrix[i][col] ) {
-				System.out.println("number already exists in column");
+				//System.out.println("number already exists in column");
 				return false; 
 			}
 		}
@@ -229,7 +229,7 @@ public class SudokuSolverClass implements SudokuSolver {
 		for(int r = 0 ; r < sizeRoot ; r++) {
 			for(int c = 0 ; c < sizeRoot ; c++) {
 				if(matrix[startRow + r][startCol + c] == num) {
-					System.out.println("number already exists in square");
+					//System.out.println("number already exists in square");
 					return false; 					
 				}
 			}
@@ -289,9 +289,13 @@ public class SudokuSolverClass implements SudokuSolver {
 	 * @return true if the numbers are valid
 	 */
 	@Override
-	public boolean isValid() {
+	public boolean isValid() throws IllegalArgumentException {
 		
-		return checkInputs();
+		if(checkInputs()) {
+			return true;
+		} else {
+			throw new IllegalArgumentException("Digit outside of range");
+		}
 	}
 
 	/**
@@ -311,10 +315,19 @@ public class SudokuSolverClass implements SudokuSolver {
 	 * @param m: the matrix to set
 	 */
 	@Override
-	public void setMatrix(int[][] m) {
+	public void setMatrix(int[][] m)  throws IllegalArgumentException  {
+		
+		if (m.length != this.size && m[0].length != this.size) {
+			throw new IllegalArgumentException("Matrix has wrong dimensions");
+		}
+		
 		for (int r = 0; r < size; r++) {
 	           for (int c = 0; c < size; c++) { 
-	        	   matrix[r][c] = m[r][c];
+	        	   if (m[r][c] >= 0 && m[r][c] <= this.size) {
+	        		   matrix[r][c] = m[r][c];
+					} else {
+						throw new IllegalArgumentException("Digit outside of range [0 .. " +this.size+"]");
+					}
 	           	}
 			}
 	}
