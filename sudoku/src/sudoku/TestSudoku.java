@@ -109,7 +109,7 @@ class TestSudoku {
 		solver.add(1,9,2);
 		assertTrue(solver.isValid(),"Valid inputs deemed invalid.");
 		solver.add(1,2,1);
-		assertFalse(solver.isValid(),"Invalid inputs deemed valid.");
+		assertThrows(IllegalArgumentException.class,() -> solver.isValid(),"Invalid inputs deemed valid.");
 	}
 
 }

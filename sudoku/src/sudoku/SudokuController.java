@@ -114,10 +114,12 @@ public class SudokuController {
 		// try to solve
 		long startTime = System.currentTimeMillis();
 		boolean solvable = false;
+		boolean valid = false;
 		try {
 			// update the matrix
 			solver.setMatrix(matrix);
-			solvable = solver.isValid() ? solver.solve() : false;
+			valid = solver.isValid();
+			solvable = valid ? solver.solve() : false;
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(sudokuPanel, e.getMessage());
 		}
@@ -128,7 +130,7 @@ public class SudokuController {
 		if (solvable) {
 			updateGrid(false);
 			JOptionPane.showMessageDialog(sudokuPanel, "SOLVED IN " + time + " ms.");
-		} else {
+		} else if(valid) {
 			JOptionPane.showMessageDialog(sudokuPanel, "UNSOLVABLE (" + time + " ms)");
 		}
 		System.out.println("Recursion count: " + solver.getCount());
