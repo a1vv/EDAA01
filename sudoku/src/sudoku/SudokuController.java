@@ -97,7 +97,6 @@ public class SudokuController {
 			for (int c = 0; c < size; c++) {
 				String text = cells[r][c].getText();
 				if (text.equals("0")) {
-					System.out.println("Snopp");
 					matrix[r][c] = 20000;
 				} else if (text.equals("")) {
 					matrix[r][c] = 0;
